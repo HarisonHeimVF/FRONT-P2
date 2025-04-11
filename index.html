@@ -1,22 +1,144 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coleta de Altura e Gênero</title>
-    <script src="exercicio2.js" defer></script>
+  <meta charset="UTF-8">
+  <title>Alunos Aprovados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      max-width: 800px;
+      margin: 0 auto 30px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    select, button {
+      padding: 10px 16px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    select {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #resultado {
+      max-width: 800px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .aluno {
+      background-color: white;
+      padding: 20px;
+      border-left: 6px solid #2ecc71;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+    }
+
+    .aluno strong {
+      color: #2c3e50;
+    }
+  </style>
 </head>
 <body>
-    <h1>Coleta de Altura e Gênero</h1>
 
-    <form id="formulario">
-        <div id="inputs">
-            <!-- Aqui os inputs serão gerados via JavaScript -->
-        </div>
-        <button type="button" onclick="calcularResultados()">Calcular Resultados</button>
-    </form>
+  <h1>Alunos com Média ≥ 7</h1>
 
-    <h2>Resultados</h2>
-    <p id="result"></p>
+  <div class="controls">
+    <select id="cursoFiltro">
+      <option value="todos">Todos os cursos</option>
+    </select>
+    <button onclick="mostrarAprovados()">Mostrar Aprovados</button>
+  </div>
+
+  <div id="resultado"></div>
+
+  <script>
+    const alunos = [
+      { nome: "Maria Joaquinha", notas: [8, 7.5, 9], curso: "Sistemas para Internet" },
+      { nome: "João Ricardo", notas: [8, 8.5, 5], curso: "Direito" },
+      { nome: "José Henrique", notas: [4, 10, 7], curso: "Administração" },
+      { nome: "Pedro da Silva", notas: [6, 7.6, 7.5], curso: "Sistemas para Internet" },
+      { nome: "Silvana Morais", notas: [6, 7.5, 9.5], curso: "Sistemas de Informação" },
+      { nome: "Patricia Castro", notas: [1, 9, 10], curso: "Arquitetura" },
+      { nome: "Joana Ribeiro", notas: [8, 9, 9], curso: "Contabilidade" },
+      { nome: "Rafael Rocha", notas: [4, 4, 9], curso: "Sistemas para Internet" },
+      { nome: "Gustavo Henrique", notas: [8, 7.5, 5], curso: "Sistemas para Internet" }
+    ];
+
+    function preencherFiltro() {
+      const select = document.getElementById('cursoFiltro');
+      const cursosUnicos = [...new Set(alunos.map(a => a.curso))];
+
+      cursosUnicos.forEach(curso => {
+        const option = document.createElement('option');
+        option.value = curso;
+        option.textContent = curso;
+        select.appendChild(option);
+      });
+    }
+
+    function mostrarAprovados() {
+      const resultadoDiv = document.getElementById('resultado');
+      const filtro = document.getElementById('cursoFiltro').value;
+      resultadoDiv.innerHTML = '';
+
+      alunos.forEach(aluno => {
+        const media = aluno.notas.reduce((soma, nota) => soma + nota, 0) / aluno.notas.length;
+
+        if (media >= 7 && (filtro === "todos" || aluno.curso === filtro)) {
+          const alunoDiv = document.createElement('div');
+          alunoDiv.className = 'aluno';
+          alunoDiv.innerHTML = `
+            <p><strong>Nome:</strong> ${aluno.nome}</p>
+            <p><strong>Média:</strong> ${media.toFixed(2)}</p>
+            <p><strong>Curso:</strong> ${aluno.curso}</p>
+          `;
+          resultadoDiv.appendChild(alunoDiv);
+        }
+      });
+    }
+
+
+    window.onload = preencherFiltro;
+  </script>
+
 </body>
 </html>
